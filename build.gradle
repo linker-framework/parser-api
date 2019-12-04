@@ -1,0 +1,111 @@
+plugins {
+    // Apply the java-library plugin to add support for Java Library
+    id 'java-library'
+    id "maven"
+    id "maven-publish"
+    id "signing"
+    id "eclipse"
+}
+
+project.group = 'com.onkiup'
+project.version = '0.9'
+
+compileJava   {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+    // This dependency is exported to consumers, that is to say found on their compile classpath.
+    api 'org.apache.commons:commons-math3:3.6.1'
+
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.28'
+    implementation 'com.google.guava:guava:27.0.1-jre'
+    implementation "com.onkiup:linker-parser:${project.version}"
+    implementation 'com.onkiup:linker-utils:0.9'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+
+            pom.project {
+                name 'Linker-Parser'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Text parser that uses Java classes as grammar definitions'
+                url 'https://github.com/chedim/linker-parser-api'
+
+                scm {
+                    connection 'scm:git:https://github.com/chedim/linker-parser-api.git'
+                    developerConnection 'scm:git:git@github.com:chedim/linker-parser-api.git'
+                    url 'https://github.com/chedim/linker-parser-api'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'https://raw.githubusercontent.com/chedim/linker-parser-api/master/LICENSE'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'chedim'
+                        name 'Dmitrii Chechetkin'
+                        email 'chedim@chedim.com'
+                    }
+                }
+            }
+        }
+    }
+}
