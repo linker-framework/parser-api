@@ -32,7 +32,7 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.28'
     implementation 'com.google.guava:guava:27.0.1-jre'
-    implementation "com.onkiup:linker-parser:0.8" // ${project.version}"
+    implementation "com.onkiup:linker-parser-core:0.9" // ${project.version}"
     implementation 'com.onkiup:linker-utils:0.9'
 
     // Use JUnit test framework

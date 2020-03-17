@@ -6,32 +6,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import com.onkiup.linker.parser.ParserLocation;
-import com.onkiup.linker.parser.Rule;
-import com.onkiup.linker.parser.TokenGrammar;
-
 /**
  * Common interface for any tokens that can contain children tokens
  * @param <X> the type of resulting token
  */
 public interface CompoundToken<X> extends PartialToken<X>, Serializable {
-
-  /**
-   * Creates a new CompoundToken for the provided class
-   * @param type class for which new token should be created
-   * @param position position at which the token will be located in the parser's input
-   * @return created CompoundToken
-   */
-  static CompoundToken forClass(Class<? extends Rule> type, int childNumber, ParserLocation position) {
-    if (position == null) {
-      position = new ParserLocation(null, 0, 0, 0);
-    }
-    if (TokenGrammar.isConcrete(type)) {
-      return new RuleToken(null, childNumber, null, type, position);
-    } else {
-      return new VariantToken(null, childNumber, null, type, position);
-    }
-  }
 
   /**
    * @return expected number of children tokens

@@ -11,6 +11,6 @@ import com.onkiup.linker.parser.TokenMatcher;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface CustomMatcher {
-  Class<? extends TokenMatcher> value();    
+  Class<? extends TokenMatcher> value();
 }
 

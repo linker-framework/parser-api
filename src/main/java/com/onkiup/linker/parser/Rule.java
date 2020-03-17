@@ -13,12 +13,11 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-
-import com.onkiup.linker.parser.token.CompoundToken;
+import com.onkiup.linker.parser.token.ParentToken;
 import com.onkiup.linker.parser.token.PartialToken;
-import com.onkiup.linker.parser.token.RuleToken;
 import com.onkiup.linker.util.TypeUtils;
+
+import org.slf4j.Logger;
 
 // in 0.4:
 // - changed Metadata to hold PartialTokens instead of ParserLocations
@@ -71,9 +70,9 @@ public interface Rule {
   default <R extends Rule> Optional<R> parent() {
     return Metadata.metadata(this).map(meta -> {
       do {
-        meta = (PartialToken)meta.parent().orElse(null);
-      } while (!(meta instanceof RuleToken));
-      return (CompoundToken)meta;
+        meta = (PartialToken<?>)meta.parent().orElse(null);
+      } while (!(meta instanceof ParentToken));
+      return (PartialToken<R>)meta;
     }).flatMap(PartialToken::token);
   }
 
@@ -149,9 +148,8 @@ public interface Rule {
           Class<E>[] candidates;
 
           if (!TypeUtils.isConcrete(type)) {
-            candidates = ParserContext.get()
-                .subClasses(type)
-                .filter(TokenGrammar::isConcrete)
+            candidates = TypeUtils.subClasses(type)
+                .filter(TypeUtils::isConcrete)
                 .filter(Extension.class::isAssignableFrom)
                 .filter(impl -> {
                   Class<?> extended = TypeUtils.typeParameter((Class<? extends Extension>) impl, Extension.class, 0);
@@ -204,9 +202,8 @@ public interface Rule {
         Map<Class<?>,Conversion<?,?>> myConversions = Metadata.conversions.get(getClass());
 
         if (!myConversions.containsKey(target)) {
-          Class<Conversion<?,?>>[] candidates = (Class<Conversion<?,?>>[])ParserContext.get()
-              .subClasses(Conversion.class)
-              .filter(TokenGrammar::isConcrete)
+          Class<Conversion<?,?>>[] candidates = (Class<Conversion<?,?>>[])TypeUtils.subClasses(target)
+              .filter(TypeUtils::isConcrete)
               .filter(impl -> {
                 Class<?> from = TypeUtils.typeParameter(impl, Conversion.class, 0);
                 Class<?> to = TypeUtils.typeParameter(impl, Conversion.class, 1);

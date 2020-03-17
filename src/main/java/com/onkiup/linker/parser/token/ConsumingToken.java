@@ -11,8 +11,8 @@ import com.onkiup.linker.parser.Rule;
 import com.onkiup.linker.parser.TestResult;
 import com.onkiup.linker.parser.TokenMatcher;
 import com.onkiup.linker.parser.TokenTestResult;
-import com.onkiup.linker.parser.util.LoggerLayout;
 import com.onkiup.linker.parser.util.ParserError;
+import com.onkiup.linker.util.LoggerLayout;
 
 /**
  * Interfacde that represents any token that can advance parser by consuming characters from parser's buffer
