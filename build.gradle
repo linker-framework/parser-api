@@ -32,7 +32,7 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.28'
     implementation 'com.google.guava:guava:27.0.1-jre'
-    implementation "com.onkiup:linker-parser:${project.version}"
+    implementation "com.onkiup:linker-parser:0.8" // ${project.version}"
     implementation 'com.onkiup:linker-utils:0.9'
 
     // Use JUnit test framework
@@ -70,6 +70,8 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
+/**
+            // lost the password, need to replace the repo
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: nexusUsername, password: nexusPassword)
             }
@@ -77,6 +79,7 @@ uploadArchives {
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                 authentication(userName: nexusUsername, password: nexusPassword)
             }
+*/
 
             pom.project {
                 name 'Linker-Parser'
