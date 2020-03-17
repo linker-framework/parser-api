@@ -46,6 +46,7 @@ public interface PartialToken<X> extends Serializable {
       throw new ParserError("Child token position cannot be null", parent);
     }
 
+
     Class fieldType = field.getType();
     return forField(parent, childNumber, field, fieldType, position);
   }
